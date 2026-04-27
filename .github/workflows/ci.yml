@@ -1,4 +1,4 @@
-name: CI Basic
+name: CI Security
 
 on:
   push:
@@ -24,5 +24,28 @@ jobs:
       - name: Ejecutar tests
         run: node ./node_modules/jest/bin/jest.js
 
+      - name: SAST con Semgrep
+        run: |
+          pip install semgrep
+          semgrep --config=auto
+
       - name: Escaneo de dependencias
         run: npm audit || true
+
+      - name: Iniciar aplicación
+        run: |
+          npm start &
+          sleep 90
+          curl -I http://localhost:3001 || true
+
+      - name: Ejecutar ZAP Scan
+        uses: zaproxy/action-baseline@v0.15.0
+        with:
+          target: 'http://localhost:3001'
+          cmd_options: '-r report_html.html'
+
+      - name: Subir reporte
+        uses: actions/upload-artifact@v4
+        with:
+          name: ZAP-Report
+          path: report_html.html
