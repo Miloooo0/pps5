@@ -22,12 +22,12 @@ jobs:
       - name: Stop old monitoring stack
         run: |
           cd monitoring
-          docker-compose down || true
+          docker compose down || true
 
       - name: Start monitoring stack
         run: |
           cd monitoring
-          docker-compose up -d
+          docker compose up -d
 
       - name: Show running containers
         run: docker ps
