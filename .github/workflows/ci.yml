@@ -5,6 +5,10 @@ on:
     branches: [ desarrollo ]
   workflow_dispatch:
 
+permissions:
+  issues: write
+  contents: read
+
 jobs:
   test:
     runs-on: ubuntu-latest
